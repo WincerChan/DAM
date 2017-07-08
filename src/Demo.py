@@ -52,9 +52,9 @@ class Downloader():
 
 if __name__ == '__main__':
     try:
-        url ='http://dldir1.qq.com/qqfile/qq/QQ8.9.3/21169/QQ8.9.3.exe' 
-        nums = 8
-        name = 'yy.jpg'
+        url = input('Please enter a legal url: ')
+        nums = int(input('Please enter a number of thread: '))
+        name = input('Please enter a output file name: ')
         down = Downloader(url, nums, name)
         begin = time.time()
         down.run()
@@ -64,7 +64,4 @@ if __name__ == '__main__':
     except KeyError:
         print('Oops, this url is not legal, we can\'t handle it')
     except ValueError:
-        print('Oops, this numbers is not digital.')
-
-
-
+        print('Oops, this number is not digital.')
