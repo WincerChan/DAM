@@ -5,8 +5,8 @@ class Downloader():
         self.url = url
         self.nums = int(nums)
         self.name = name
-        r_head = requests.head(self.url)
-        self.size = int(r_head.headers['Content-Length'])
+        resp_h = requests.head(self.url)
+        self.size = int(resp_h.headers['Content-Length'])
         print('File size: {} {}'.format(self.size, 'Bytes'))
 
         ## 分割成nums个块
@@ -26,9 +26,9 @@ class Downloader():
         try:
             begin = time.time()
             headers = {'Range':'Bytes={} - {}'.format(start, end), 'Accept-Encoding':'*'}
-            r_g = requests.get(self.url, headers=headers)
+            resp_g = requests.get(self.url, headers=headers)
             self.file.seek(start)
-            self.file.write(r_g.content)
+            self.file.write(resp_g.content)
             print('{} ended, speed is {:.1f} kb/s.'
                   .format(threading.current_thread().name,(end - start)/(time.time() - begin)/1024))
         except Exception as e:
