@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+'Multi-threaded download'
+
+
+__author__ = 'Wincer Chan'
+
 import requests, threading, time
 
 class Downloader():
