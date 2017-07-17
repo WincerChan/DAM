@@ -15,6 +15,10 @@ class Downloader():
         self.nums = int(nums)
         self.name = name
         resp_h = requests.head(self.url)
+        if resp_h.status_code == 302:
+            self.url = resp_h.headers['Location']
+            resp_h = requests.head(self.url)
+            print("This url has redirected to {}".format(self.url))
         self.size = int(resp_h.headers['Content-Length'])
         print('File size: {} {}'.format(self.size, 'Bytes'))
 
