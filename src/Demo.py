@@ -2,79 +2,66 @@
 # -*- coding: utf-8 -*-
 
 
-'Multi-threaded download'
-
-
-__author__ = 'Wincer Chan'
-
-import requests, threading, time
-
-class Downloader():
-    def __init__(self, url, nums, name):
+import sys
+import requests
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor, wait
+ 
+lock = threading.Lock()
+class Downloader(): 
+    def __init__(self, url):
         self.url = url
-        self.nums = int(nums)
-        self.name = name
-        resp_h = requests.head(self.url)
-        if resp_h.status_code == 302:
-            self.url = resp_h.headers['Location']
-            resp_h = requests.head(self.url)
-            print("This url has redirected to {}".format(self.url))
-        self.size = int(resp_h.headers['Content-Length'])
-        print('File size: {} {}'.format(self.size, 'Bytes'))
+        self.num = 5
+        self.name = self.url.split('/')[-1]
+        r = requests.head(self.url)
+        print(r.status_code)
+        if r.status_code == 302:
+            self.url = r.headers['Location']
+            print("该url已重定向至{}".format(self.url))
+            r = requests.head(self.url)
+        self.size = int(r.headers['Content-Length'])
+        print('该文件大小为：{} bytes'.format(self.size))
 
-        ## 分割成nums个块
-    def get_segment(self):
-        segments = []
-        ## 每个块的大小
-        length = int(self.size / self.nums)
-        for i in range(self.nums):
-            if i == self.nums - 1:
-                segments.append((i * length, self.size))
-            else:
-                segments.append((i * length, (i + 1) * length - 1))
-        return segments
+    def down(self, start, end):
+        
+        headers = {'Range': 'bytes={}-{}'.format(start, end)}
+        r = requests.get(self.url, headers=headers, stream=True)
 
-    # 下载每一个线程
-    def download(self, start, end):
-        try:
-            begin = time.time()
-            headers = {'Range':'Bytes={} - {}'.format(start, end), 'Accept-Encoding':'*'}
-            resp_g = requests.get(self.url, headers=headers)
-            self.file.seek(start)
-            self.file.write(resp_g.content)
-            print('{} ended, speed is {:.1f} kb/s.'
-                  .format(threading.current_thread().name,(end - start)/(time.time() - begin)/1024))
-        except Exception as e:
-            print(e)
-
-
-
+        # 写入文件对应位置
+        lock.acquire()
+        with open(self.name, "rb+") as fp:
+            fp.seek(start)
+            fp.write(r.content)
+            lock.release()
+        
+ 
     def run(self):
-        with open(self.name, 'wb') as self.file:
-            n = 0
-            thread_list = []
-            for seg in self.get_segment():
-                start, end = seg
-                print('thread {} start: {}, end: {}'.format(n, start, end))
-                n += 1
-                thread = threading.Thread(target = self.download, args = (start, end))
-                thread.start()
-                thread_list.append(thread)
-            for i in thread_list:
-                i.join()
-
+        #  创建一个和要下载文件一样大小的文件
+        fp = open(self.name, "wb")
+        fp.truncate(self.size)
+        fp.close()
+ 
+        # 启动多线程写文件
+        part = self.size // self.num  
+        pool = ThreadPoolExecutor(max_workers = self.num)
+        futures = []
+        for i in range(self.num):
+            start = part * i
+            if i == self.num - 1:   # 最后一块
+                end = self.size
+            else:
+                end = start + part - 1
+                print(start, end)
+            futures.append(pool.submit(self.down, start, end))
+        wait(futures)
+        print('%s 下载完成' % self.name)
+ 
 if __name__ == '__main__':
-    try:
-        url = input('Please enter a legal url: ')
-        nums = int(input('Please enter a number of thread: '))
-        name = input('Please enter a output file name: ')
-        down = Downloader(url, nums, name)
-        begin = time.time()
-        down.run()
-        print('Download {} successful, spend {:.1f}s'.format(name, time.time() - begin))
-    except requests.exceptions.RequestException:
-        print('Oops, this url is not legal, we can\'t handle it')
-    except KeyError:
-        print('Oops, this url is not legal, we can\'t handle it')
-    except ValueError:
-        print('Oops, this number is not digital.')
+    url = ''
+    start = time.time()  
+    down = Downloader(url)
+    down.run()
+    end = time.time()
+    print("用时: ", end='')
+    print(end-start
