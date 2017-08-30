@@ -14,7 +14,7 @@ python    test.py    \[\<url>]    \[-n <选项>]    [-o <选项>]
 
 ## Example
 
-![测试截图](https://ws1.sinaimg.cn/large/ba22af52gy1fj1v5vzg03j20sq0k441t.jpg)
+![](image/Example1.png)
 
 ## To Do
 
