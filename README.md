@@ -2,7 +2,7 @@
 A multi-threaded downloader written by python.
 
 ## Usage
-./down.py&nbsp;&nbsp;&nbsp;&nbsp;\[\<url>]&nbsp;&nbsp;&nbsp;&nbsp;\[-n <选项>]&nbsp;&nbsp;&nbsp;&nbsp;[-o <选项>]
+$ ./down.py&nbsp;&nbsp;&nbsp;&nbsp;\[\<url>]&nbsp;&nbsp;&nbsp;&nbsp;\[-n <选项>]&nbsp;&nbsp;&nbsp;&nbsp;[-o <选项>]
 
 | 选项                 | 参数   | 含义           |
 | :----------------- | :--- | :----------- |
