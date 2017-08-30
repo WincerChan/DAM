@@ -7,7 +7,7 @@ from Demo import Downloader
 
 
 usage = """
-用法： python test.py [<地址>] [-n <选项>] [-o <选项>]
+用法： ./down.py [<地址>] [-n <选项>] [-o <选项>]
 
 url                      None     指定下载链接
 num-connection=x         -n x     指定连接数目（即线程数）
