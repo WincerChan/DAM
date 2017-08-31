@@ -3,11 +3,11 @@ from getopt import GetoptError, getopt
 from sys import argv, exit
 from time import time
 
-from Demo import Downloader
+from downloader import Downloader
 
 
 usage = """
-用法： ./down.py [<地址>] [-n <选项>] [-o <选项>]
+用法： ./dam.py [<地址>] [-n <选项>] [-o <选项>]
 
 url                      None     指定下载链接
 num-connection=x         -n x     指定连接数目（即线程数）
@@ -54,7 +54,6 @@ def main(argv):
         elif opt == "-o":
             outputfile = arg
     print('输入的url为：{}'.format(inputurl))
-    print('下载的线程数：{}'.format(numthread))
     print('输出的文件名为：{}'.format(outputfile))
     return inputurl, numthread, outputfile
 
