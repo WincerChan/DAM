@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from getopt import GetoptError, getopt
 from sys import argv, exit
 from time import time
@@ -16,6 +17,7 @@ help                     -h       帮助信息
 version                  -v       版本信息
 
 """
+
 version = """
 版本 1.1 (Linux)
 
