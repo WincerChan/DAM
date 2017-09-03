@@ -76,5 +76,5 @@ if __name__ == "__main__":
         print(e)
         exit(2)
     end = time()
-    print("用时: ", end='')
-    print(end - start)
+    print("用时: {times}, 平均速度: {speed:.2f}KB/s.".format(
+        times=end - start, speed=down.size / (end - start)))
